@@ -1,0 +1,5 @@
+target 'sample-ios' do
+  use_frameworks!
+  platform :ios, '14.1'
+  pod 'analytics', :path => '../analytics'
+end
