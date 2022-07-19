@@ -8,9 +8,8 @@ plugins {
 }
 
 allprojects {
-  group = "io.github.ppav.analyticshub"
+  group = "io.github.ppav.analytics"
   version = "0.0.1"
-
 
   val localProps = gradleLocalProperties(rootDir)
   val emptyJavadocJar by tasks.registering(Jar::class) {
@@ -18,59 +17,63 @@ allprojects {
   }
 
   afterEvaluate {
-    extensions.findByType<PublishingExtension>()?.apply {
-      publications.withType<MavenPublication>().configureEach {
-        artifact(emptyJavadocJar.get())
+    extensions.findByType<PublishingExtension>()
+        ?.apply {
+          publications.withType<MavenPublication>()
+              .configureEach {
+                artifact(emptyJavadocJar.get())
 
-        pom {
-          name.set("Analytics")
-          description.set("Analytics library")
-          url.set("https://github.com/ppav/analytics")
+                pom {
+                  name.set("Analytics")
+                  description.set("Analytics library")
+                  url.set("https://github.com/ppav/analytics")
 
-          licenses {
-            license {
-              name.set("MIT")
-              url.set("https://opensource.org/licenses/MIT")
+                  licenses {
+                    license {
+                      name.set("MIT")
+                      url.set("https://opensource.org/licenses/MIT")
+                    }
+                  }
+                  developers {
+                    developer {
+                      id.set(localProps.getProperty("developerId"))
+                      name.set(localProps.getProperty("developerName"))
+                      email.set(localProps.getProperty("developerEmail"))
+                    }
+                  }
+                  scm {
+                    url.set("https://github.com/ppav/analytics")
+                  }
+                }
+              }
+
+          repositories {
+            maven {
+              name = "sonatype"
+              url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+              credentials {
+                username = localProps.getProperty("ossrhUsername")
+                password = localProps.getProperty("ossrhPassword")
+              }
             }
           }
-          developers {
-            developer {
-              id.set(localProps.getProperty("developerId"))
-              name.set(localProps.getProperty("developerName"))
-              email.set(localProps.getProperty("developerEmail"))
-            }
-          }
-          scm {
-            url.set("https://github.com/ppav/analytics")
-          }
         }
-      }
-
-      repositories {
-        maven {
-          name = "sonatype"
-          url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-          credentials {
-            username = localProps.getProperty("ossrhUsername")
-            password = localProps.getProperty("ossrhPassword")
-          }
-        }
-      }
-    }
 
     project.ext["signing.keyId"] = localProps.getProperty("signing.keyId")
     project.ext["signing.secretKeyRingFile"] = localProps.getProperty("signing.secretKeyRingFile")
     project.ext["signing.password"] = localProps.getProperty("signing.password")
 
-    extensions.findByType<SigningExtension>()?.apply {
-      val publishing = extensions.findByType<PublishingExtension>() ?: return@apply
-      sign(publishing.publications)
-    }
+    extensions.findByType<SigningExtension>()
+        ?.apply {
+          val publishing = extensions.findByType<PublishingExtension>() ?: return@apply
+          sign(publishing.publications)
+        }
 
     val isReleaseBuild = localProps.containsKey("signing.keyId")
-    tasks.withType<Sign>().configureEach {
-      onlyIf { isReleaseBuild }
-    }
+    tasks.withType<Sign>()
+        .configureEach {
+          onlyIf { isReleaseBuild }
+        }
   }
 }
 

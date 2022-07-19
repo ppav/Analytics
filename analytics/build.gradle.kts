@@ -8,6 +8,7 @@ plugins {
 }
 
 kotlin {
+
   jvm()
 
   val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
@@ -28,21 +29,12 @@ kotlin {
     podfile = project.file("../sample-ios/Podfile")
   }
 
-
   sourceSets {
     val commonMain by getting {
       dependencies {
         implementation(Deps.Coroutines.core)
       }
     }
-
-//    val commonTest by getting {
-//      dependencies {
-//        implementation(Deps.Coroutines.core)
-//        implementation(kotlin("test"))
-//        implementation ("io.mockk:mockk-common:1.10.0")
-//      }
-//    }
 
     val iosMain by getting
     val iosTest by getting
@@ -56,11 +48,12 @@ kotlin {
       }
     }
   }
+}
 
-  publishing {
-    publications {
-      create<MavenPublication>("release") { }
+publishing {
+  publications {
+    withType<MavenPublication> {
+      artifactId = "analytics"
     }
   }
-
 }

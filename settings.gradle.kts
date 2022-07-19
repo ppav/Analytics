@@ -12,7 +12,7 @@ dependencyResolutionManagement {
     mavenCentral()
   }
 }
-rootProject.name = "analytics-hub"
+rootProject.name = "Analytics"
 
 include(":analytics")
 include(":analytics-consumer:yandexmetrika")
