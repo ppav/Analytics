@@ -39,6 +39,13 @@ data class Event(
       return this
     }
 
+    fun withSum(
+      sum: Sum
+    ) = this.also {
+      purchaseSum = sum
+      return this
+    }
+
     fun build() =
       Event(name, purchaseSum, paramsBuilder.build())
   }

@@ -1,7 +1,120 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ppav.analytics/analytics)](https://repo1.maven.org/maven2/io/github/ppav) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Analytics
 
+## Download
+```kotlin
+dependencies {
+  //...
+  implementation("io.github.ppav.analytics:analytics:${latest_version}")
+  
+  
+  //optional
+  implementation "io.github.ppav.analytics:consumer-firebase:${latest_version}"
+  implementation "io.github.ppav.analytics:consumer-yandexmetrika:${latest_version}"
+  implementation "io.github.ppav.analytics:consumer-amplitude:${latest_version}"  
+
+}
+```
+
+<img src="images/scheme.png" width="90%">
+
+## Usage
+
+```kotlin
+ val analytics = Analytics.Builder()
+  .addConsumer(YandexMetricaConsumer(YANDEX_EVENTS))
+  .addConsumer(`fooConsumer`)
+  .addInterceptor(CommonInterceptor())
+  .addConsumerInterceptor(FooConsumerInterceptor())
+
+  .setExceptionHandler { error -> logger.warning(error.message ?: "") }
+  .setDebugLog(true) // enable trace log
+  .build()
+
+```
+
+## Event 
+
+
+```kotlin
+/* Example */
+fun fooEvent(param: String) = Event.Builder("event_foo")
+      .withParam("fooParam", param)
+      .build()
+```
+
+```kotlin
+fun revenueEvent(productName: String, sum: Sum) = listOf(
+
+    /* common event */
+    Event.Builder("event_revenue")
+      .withSum(sum)
+      .withParam("productName", productName)
+      .build(),
+      
+    /* direct event */
+    YandexMetricaDirectEvent.revenue(sum, productName)
+  )
+
+```
+
+
+Track event
+```kotlin
+analytics.track(revenueEvent("param", Sum(3.0, "USD")))
+```
+
+## Consumer
+
+Example of consumer
+```kotlin 
+/* Example */
+class FooConsumer(val handleEvents: List<String>): AnalyticsConsumer {
+
+  /* true if you want to receive an event */
+  fun canAccept(event: String) : Boolean = handleEvents.contains(event) 
+
+  /* handle the event */
+  fun acceptEvent(event: AnalyticsEvent) {} 
+}
+```
+
+
+## Interceptor 
+
+Intercepts all events (excludes DirectEvent)
+Can be used to add default parameters to events
+
+```kotlin
+interface Interceptor {
+  suspend fun intercept(event: Event): Event
+}
+```
+
+```kotlin
+/* Example */
+class CommonInterceptor : Interceptor {
+  override suspend fun intercept(event: Event) =
+    event.copy(params = event.params + mapOf("deviceId" to "ID", "userId" to "ID"))
+}
+```
+
+#### ConsumerInterceptor
+Can intercept events for specific consumers 
+
+
+```kotlin
+/* Example */
+class FooConsumerInterceptor : ConsumerInterceptor {
+  override suspend fun intercept(
+    consumer: AnalyticsConsumer,
+    event: Event
+  ) = takeIf { consumer is FooConsumer }
+      ?.let { event.copy(params = event.params + ("fooUserId" to "ID")) }
+      ?: event
+}
+```
 
 
 ## License

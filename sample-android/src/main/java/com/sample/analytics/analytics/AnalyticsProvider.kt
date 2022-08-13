@@ -15,12 +15,15 @@ import com.sample.analytics.App
 import com.sample.analytics.analytics.event.CheckoutAnalytics
 import java.util.logging.Logger
 
+
+private val logger = Logger.getLogger("logger_analytics_sample")
 object AnalyticsProvider {
 
   private lateinit var INSTANCE: Analytics
 
   private val YANDEX_EVENTS = listOf(*eventArray<CheckoutAnalytics.Events>())
   private val FIREBASE_EVENTS = listOf(CheckoutAnalytics.Events.ADDRESS_SELECTED.event)
+
 
   fun provide(): Analytics =
     if (::INSTANCE.isInitialized) INSTANCE
@@ -32,7 +35,7 @@ object AnalyticsProvider {
           .addConsumer(FirebaseConsumer(FirebaseAnalytics.getInstance(App.INSTANCE), FIREBASE_EVENTS))
           .addInterceptor(CommonInterceptor())
           .addConsumerInterceptor(FooConsumerInterceptor())
-//          .setExceptionHandler { error -> logger.warning(error.message ?: "") }
+          .setExceptionHandler { error -> logger.warning(error.message ?: "") }
           .setDebugLog(true)
           .build()
       INSTANCE
@@ -45,12 +48,12 @@ class CommonInterceptor : Interceptor {
     event.copy(params = event.params + mapOf("deviceId" to "ID", "userId" to "ID"))
 }
 
-//private val logger = Logger.getLogger("logger_analytics_sample")
 
 class FooConsumer : BaseAnalyticsConsumer(ALL) {
   override fun acceptDefaultEvent(event: Event) {
-//    logger.info("${this::class.simpleName} acceptEvent: $event")
+    logger.info("${this::class.simpleName} acceptEvent: $event")
   }
+
 }
 
 class FooConsumerInterceptor : ConsumerInterceptor {
