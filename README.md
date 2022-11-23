@@ -120,8 +120,11 @@ class FooConsumerInterceptor : ConsumerInterceptor {
 }
 ```
 
+## Samples
+<img src="images/1.png" width="80%">
 
 ## License
+
 ```
 MIT License
 
