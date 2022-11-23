@@ -2,6 +2,11 @@
 
 ## Analytics
 
+
+<img src="images/scheme.png" width="90%">
+
+Kotlin Multiplatform  library as a simple facade or abstraction for analytics
+
 ## Download
 ```kotlin
 dependencies {
@@ -17,7 +22,6 @@ dependencies {
 }
 ```
 
-<img src="images/scheme.png" width="90%">
 
 ## Usage
 
