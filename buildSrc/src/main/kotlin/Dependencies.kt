@@ -6,32 +6,31 @@ object Sdk {
 
 object Deps {
 
-
-  const val kotlin = "1.6.10"
   const val junit = "junit:junit:4.12"
   const val mockk = "io.mockk:mockk:1.10.0"
   const val okhttp = "com.squareup.okhttp3:okhttp:4.9.3"
 
-
-
   object Coroutines {
-    private const val version = "1.6.0-native-mt"
+    private const val version = "1.6.4"
 
     const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
-    const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
-    const val test  = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
+    const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
+    const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
   }
 
   object YandexMetrica {
-    const val lib = "com.yandex.android:mobmetricalib:4.2.0"
+    /*https://mvnrepository.com/artifact/com.yandex.android/mobmetricalib*/
+    const val lib = "com.yandex.android:mobmetricalib:5.3.0"
   }
 
   object Firebase {
-    const val core = "com.google.firebase:firebase-core:21.0.0"
+    /*https://mvnrepository.com/artifact/com.google.firebase/firebase-core*/
+    const val core = "com.google.firebase:firebase-core:21.1.1"
   }
 
   object Amplitude {
-    const val sdk = "com.amplitude:android-sdk:2.25.2"
+    /*https://mvnrepository.com/artifact/com.amplitude/android-sdk*/
+    const val sdk = "com.amplitude:android-sdk:3.35.1"
   }
 
 }
